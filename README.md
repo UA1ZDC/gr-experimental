@@ -8,7 +8,7 @@ Blocks are based on: [LeanHRPT-Demod](https://github.com/Xerbo/LeanHRPT-Demod)
 
 ### Installation
 
-You will need GNU Radio 3.10+ to install these blocks.
+GNU Radio 3.10+ and [libcorrect](https://github.com/quiet/libcorrect) is required to install these blocks.
 
 ```
 sudo apt update && sudo apt upgrade
