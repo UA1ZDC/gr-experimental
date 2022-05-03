@@ -45,6 +45,7 @@ namespace gr {
     //#pragma message("implement a forecast that fills in how many items on each input you need to produce noutput_items and remove this warning")
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
     	ninput_items_required[0] = noutput_items;
+    	ninput_items_required[1] = noutput_items;
     }
 
     int
