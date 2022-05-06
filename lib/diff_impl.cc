@@ -30,7 +30,9 @@ namespace gr {
       : gr::block("diff",
               gr::io_signature::make(2 /* min inputs */, 2 /* max inputs */, sizeof(input_type)),
               gr::io_signature::make(1 /* min outputs */, 1 /*max outputs */, sizeof(output_type)))
-    {}
+    {
+    	this->set_relative_rate(2, 1);
+    }
 
     /*
      * Our virtual destructor.
@@ -42,10 +44,15 @@ namespace gr {
     void
     diff_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-    //#pragma message("implement a forecast that fills in how many items on each input you need to produce noutput_items and remove this warning")
+    #pragma message("implement a forecast that fills in how many items on each input you need to produce noutput_items and remove this warning")
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
-    	ninput_items_required[0] = noutput_items;
-    	ninput_items_required[1] = noutput_items;
+        const int input_required = (int)ceil(noutput_items/
+                                             (1.0 * 2));
+        const unsigned ninputs = ninput_items_required.size();
+        for (unsigned int i = 0; i < ninputs; i++) {
+            ninput_items_required[i] = input_required;
+            // printf("Forecast wants %d needs %d\n",noutput_items,ninput_items_required[i]);
+        }
     }
 
     int
@@ -64,7 +71,10 @@ namespace gr {
       uint8_t diffOut, diffBuffer = 0;
       size_t o = 0;
 
-      for (size_t i = 0; i < noutput_items; i++) {
+      int input_required = (int)ceil(noutput_items/
+              (1.0 * 2));
+
+      for (size_t i = 0; i < input_required; i++) {
           for(int j = 7; j >= 0; j--) {
               bool Xin = std::bitset<8>(in_a[i]).test(j);
               bool Yin = std::bitset<8>(in_b[i]).test(j);
@@ -89,7 +99,7 @@ namespace gr {
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
-      consume_each (noutput_items);
+      consume_each (input_required);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
